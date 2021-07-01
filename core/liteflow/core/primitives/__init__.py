@@ -4,3 +4,4 @@ from .foreach import Foreach
 from .if_step import If
 from .while_step import While
 from .sequence import Sequence
+from .foreachsequence import ForeachSequence

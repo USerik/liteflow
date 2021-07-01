@@ -77,6 +77,18 @@ class StepBuilder(Generic[TStep]):
 
         return step_builder
 
+    def for_each_seq(self, in_value: Callable[[Any, StepExecutionContext], List]):
+        new_step = WorkflowStep(ForeachSequence)
+        new_step.body = ForeachSequence
+        self.workflow_builder.add_step(new_step)
+        step_builder = StepBuilder[TStep](new_step, self.workflow_builder)
+        step_builder.input('in_value', in_value)
+        outcome = StepOutcome()
+        outcome.next_step = new_step.id
+        self.step.outcomes.append(outcome)
+
+        return step_builder
+
     def for_each(self, collection: Callable[[Any, StepExecutionContext], List]):
         new_step = WorkflowStep(Foreach)
         new_step.body = Foreach

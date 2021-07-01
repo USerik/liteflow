@@ -18,3 +18,7 @@ class StepBody:
     @abstractmethod
     def run(self, context: StepExecutionContext) -> ExecutionResult:
         raise NotImplementedError
+
+    @abstractmethod
+    def on_error(pointer):
+        pass
