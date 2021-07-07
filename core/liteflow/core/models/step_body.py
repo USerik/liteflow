@@ -20,5 +20,5 @@ class StepBody:
         raise NotImplementedError
 
     @abstractmethod
-    def on_error(pointer):
+    def on_error(context):
         pass
