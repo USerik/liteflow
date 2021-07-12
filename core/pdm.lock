@@ -1,0 +1,26 @@
+[[package]]
+name = "python-interface"
+version = "1.6.1"
+summary = "Pythonic Interface definitions"
+dependencies = [
+    "six",
+]
+
+[[package]]
+name = "six"
+version = "1.16.0"
+requires_python = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
+summary = "Python 2 and 3 compatibility utilities"
+
+[metadata]
+lock_version = "3"
+content_hash = "sha256:24d4936a0fe3b63dfae92527817eec45acaa647f8cd4d1a219611f43ddbf7ee4"
+
+[metadata.files]
+"python-interface 1.6.1" = [
+    {file = "python-interface-1.6.1.tar.gz", hash = "sha256:10e710f7e38826db0e9b5719e6c4260f68376c1d0fd9a1f9800708644bc63828"},
+]
+"six 1.16.0" = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]

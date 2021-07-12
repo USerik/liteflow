@@ -26,7 +26,7 @@ class WorkflowHost(implements(IWorkflowHost)):
         instance.workflow_definition_id = workflow_id
         instance.version = version
         instance.data = data
-        instance.description = definition.description
+        instance.description = definition.description # TODO: doesn`t used yet?
         instance.next_execution = 0
         instance.create_time = datetime.utcnow()
         instance.status = WorkflowInstance.RUNNABLE
