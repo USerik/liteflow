@@ -23,7 +23,6 @@ class WorkflowBuilder:
 
     def start_with(self, body: TStep) -> StepBuilder[TStep]:
         new_step = WorkflowStep(body)
-        new_step.name = body.name or body.__name__
         new_step.body = body
         self.add_step(new_step)
         return StepBuilder[TStep](new_step, self)

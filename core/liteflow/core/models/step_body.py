@@ -14,7 +14,6 @@ class StepExecutionContext:
 
 class StepBody:
     __metaclass__ = ABCMeta
-    name = None
 
     @abstractmethod
     def run(self, context: StepExecutionContext) -> ExecutionResult:

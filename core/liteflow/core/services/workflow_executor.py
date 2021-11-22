@@ -32,7 +32,7 @@ class WorkflowExecutor(implements(IWorkflowExecutor)):
                     if pointer.start_time is None:
                         pointer.start_time = datetime.datetime.utcnow()
 
-                    self._logger.log(logging.DEBUG, "Starting step id: {0} and name: {1} on workflow {2}".format(step.id, step.name, workflow.id))
+                    self._logger.log(logging.DEBUG, "Starting step id: {0} and name: {1} on workflow {2}".format(step.id, step.body.__name__, workflow.id))
 
                     context = StepExecutionContext(workflow, step, pointer.persistence_data, pointer)
                     body: StepBody = step.body()
