@@ -32,7 +32,7 @@ class WorkflowExecutor(implements(IWorkflowExecutor)):
                     if pointer.start_time is None:
                         pointer.start_time = datetime.datetime.utcnow()
 
-                    self._logger.log(logging.DEBUG, "Starting step {0} on workflow {1}".format(step.name, workflow.id))
+                    self._logger.log(logging.DEBUG, "Starting step id: {0} and name: {1} on workflow {2}".format(step.id, step.name, workflow.id))
 
                     context = StepExecutionContext(workflow, step, pointer.persistence_data, pointer)
                     body: StepBody = step.body()
@@ -45,7 +45,7 @@ class WorkflowExecutor(implements(IWorkflowExecutor)):
                     self._result_processor.process_execution_result(workflow, definition, pointer, step, result, wf_result)
 
                 except Exception as err:
-                    self._logger.log(logging.ERROR, str(err))
+                    self._logger.log(logging.ERROR, logging.exception("Step error"))
                     errEx = ExecutionError()
                     errEx.workflow_id = workflow.id
                     errEx.execution_pointer_id = pointer.id
