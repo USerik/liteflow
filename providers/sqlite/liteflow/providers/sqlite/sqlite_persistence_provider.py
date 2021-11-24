@@ -107,7 +107,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
         self.lock.acquire()
         try:
             result = []
-            sql = f"SELECT * FROM {Tables.subscriptions_table_name} WHERE event_name = {event_name} and event_key = {event_key} and effective_date = {effective_date}"
+            sql = f"SELECT * FROM {Tables.subscriptions_table_name} WHERE event_name = '{event_name}' and event_key = '{event_key}' and datetime(subscribe_as_of) <= datetime('{effective_date}')"
             self._cursor.execute(sql)
             for item in self._cursor.fetchall():
                 result.append(load_subscription(item))
@@ -120,7 +120,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
     def terminate_subscription(self, subscription_id):
         self.lock.acquire()
         try:
-            sql = f"DELETE * FROM {Tables.subscriptions_table_name} where id = {subscription_id}"
+            sql = f"DELETE FROM {Tables.subscriptions_table_name} where id = {subscription_id}"
             self._cursor.execute(sql)
             self._connection.commit()
         except Error as err:
@@ -135,6 +135,8 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
             columns = ', '.join(data.keys())
             placeholders = ', '.join('?' * len(data))
             sql = f""" INSERT INTO {Tables.events_table_name} ({columns}) VALUES ({placeholders})"""
+            values = [int(x) if isinstance(x, bool)
+                      else x for x in data.values()]
             self._cursor.execute(sql, values)
             evt.id = str(self._cursor.lastrowid)
             self._connection.commit()
@@ -158,7 +160,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
     def mark_event_processed(self, event_id):
         self.lock.acquire()
         try:
-            sql = f"UPDATE {Tables.events_table_name} SET is_processed = 'True' WHERE id = {event_id}"
+            sql = f"UPDATE {Tables.events_table_name} SET is_processed = 1 WHERE id = {event_id}"
             self._cursor.execute(sql)
             self._connection.commit()
         except Error as err:
@@ -169,7 +171,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
     def mark_event_unprocessed(self, event_id):
         self.lock.acquire()
         try:
-            sql = f"UPDATE {Tables.events_table_name} SET is_processed = 'False' WHERE id = {event_id}"
+            sql = f"UPDATE {Tables.events_table_name} SET is_processed = 0 WHERE id = {event_id}"
             self._cursor.execute(sql)
             self._connection.commit()
         except Error as err:
@@ -181,7 +183,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
         self.lock.acquire()
         try:
             result = []
-            sql = f"SELECT * FROM {Tables.events_table_name} WHERE is_processed = 'False' and event_time <= datetime('{effective_date}')"
+            sql = f"SELECT * FROM {Tables.events_table_name} WHERE is_processed = 0 and datetime(event_time) <= datetime('{effective_date}')"
             self._cursor.execute(sql)
             for item in self._cursor.fetchall():
                 result.append(item['id'])
@@ -195,7 +197,7 @@ class SqlitePersistenceProvider(implements(IPersistenceProvider)):
         self.lock.acquire()
         try:
             result = []
-            sql = f"SELECT * FROM {Tables.events_table_name} WHERE event_name = {event_name} and event_key = {event_key} and event_time >= datetime('{effective_date}')"
+            sql = f"SELECT * FROM {Tables.events_table_name} WHERE event_name = '{event_name}' and event_key = '{event_key}' and datetime(event_time) >= datetime('{effective_date}')"
             self._cursor.execute(sql)
             for item in self._cursor.fetchall():
                 result.append(item['id'])

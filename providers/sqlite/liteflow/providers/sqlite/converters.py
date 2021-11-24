@@ -1,4 +1,5 @@
 import pickle
+import datetime
 from typing import Dict
 from liteflow.core.models import WorkflowInstance, EventSubscription, Event, ExecutionPointer
 
@@ -134,7 +135,7 @@ def load_event(source: Dict) -> Event:
     result.event_name = source['event_name']
     result.event_key = source['event_key']
     result.event_data = pickle.loads(source['event_data'])
-    result.event_time = source['event_time']
+    result.event_time = datetime.datetime.strptime(source['event_time'], '%Y-%m-%d %H:%M:%S.%f')
     result.is_processed = source['is_processed']
 
     return result
