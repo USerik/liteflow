@@ -1,3 +1,4 @@
+from time import sleep
 from datetime import datetime
 from concurrent.futures import Executor
 from liteflow.core.services.queue_consumer import QueueConsumer
@@ -35,9 +36,9 @@ class EventConsumer(QueueConsumer):
             self._lock_service.release_lock(f"event:{item}")
 
     def seed_subscription(self, evt: Event, subscription: EventSubscription) -> bool:
-        if not self._lock_service.acquire_lock(f"workflow:{subscription.workflow_id}"):
+        while not self._lock_service.acquire_lock(f"workflow:{subscription.workflow_id}"):
             self._logger.info(f"workflow locked {subscription.workflow_id}")
-            return False
+            sleep(.5)
         try:
             instance = self._persistence_service.get_workflow_instance(subscription.workflow_id)
             self._logger.info(f"seeding workflow {instance.id}")
